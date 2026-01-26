@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 2 - Your Email</title>
+    <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="flow.css" />
+  </head>
+  <body data-page="page2">
+    <main>
+      <h1>Step 2</h1>
+      <p data-variable="message">[custom message from n8n]</p>
+      <form
+        data-n8n-form
+        data-request-variables='{"flow":"demo","step":"page2"}'
+        data-next-step-fallback="results.html"
+      >
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+        />
+        <button type="submit">Continue</button>
+      </form>
+      <p data-error></p>
+    </main>
+    <script src="../../app.js"></script>
+  </body>
+</html>

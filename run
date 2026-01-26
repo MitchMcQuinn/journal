@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+command="${1-}"
+
+case "$command" in
+  forms)
+    node "scripts/forms-server.js"
+    ;;
+  *)
+    echo "Usage: ./run forms"
+    exit 1
+    ;;
+esac

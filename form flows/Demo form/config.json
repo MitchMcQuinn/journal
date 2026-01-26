@@ -1,0 +1,11 @@
+{
+  "route": "demo",
+  "initialization": {
+    "webhook_url": "http://100.122.191.121:5678/webhook/34fcbb16-d9ec-47c2-b94b-5ddff301b16c",
+    "request_variables": {
+      "flow": "demo",
+      "step": "init"
+    },
+    "start_page": "page1.html"
+  }
+}

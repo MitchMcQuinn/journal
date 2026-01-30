@@ -29,10 +29,23 @@ const safePathFromUrl = (urlPath) => {
   return normalized;
 };
 
-const toSpacePath = (urlPath) => {
+const toSpacePathAll = (urlPath) => {
   return urlPath
     .split("/")
     .map((segment) => segment.replace(/-/g, " "))
+    .join("/");
+};
+
+const toSpacePathDirsOnly = (urlPath) => {
+  const parts = urlPath.split("/");
+  const lastIndex = parts.length - 1;
+  return parts
+    .map((segment, index) => {
+      if (index === lastIndex) {
+        return segment;
+      }
+      return segment.replace(/-/g, " ");
+    })
     .join("/");
 };
 
@@ -75,8 +88,11 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const spacedPath = toSpacePath(safePath);
-  if (spacedPath !== safePath) {
+  const spacedPaths = [toSpacePathAll(safePath), toSpacePathDirsOnly(safePath)];
+  for (const spacedPath of spacedPaths) {
+    if (spacedPath === safePath) {
+      continue;
+    }
     const altAbsolutePath = path.join(ROOT_DIR, spacedPath);
     const altRequested = tryReadFile(altAbsolutePath);
     if (altRequested) {

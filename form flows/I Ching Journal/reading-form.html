@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I Ching Journal</title>
+    <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="flow.css" />
+  </head>
+  <body data-page="results">
+    <main>
+      <p><a class="button-link" href="/i-ching">Cast Again</a></p>
+      <span data-variable="changing_lines" hidden></span>
+      <form
+        data-n8n-form
+        data-request-variables='{"flow":"i-ching-journal","step":"reading-form"}'
+        data-next-step-fallback="summary.html"
+        data-waiting-message="Saving your notes..."
+      >
+        <section>
+          <div class="note-section" data-note="casting">
+            <h1>
+              <span data-variable="lunisolar_date"></span>:
+              <span data-variable="primary_number"></span></span>–(
+              <span data-variable="changing_lines_string"></span> )➔
+              <span data-variable="resulting_number"></span>
+            </h1>
+            <h2>
+              <span data-variable="primary_name"></span> ➔
+              <span data-variable="resulting_name"></span>
+            </h2>
+          </div>
+          <textarea
+            class="note-field"
+            name="primary_resulting_title_notes"
+            placeholder="Notes about the casting as a whole"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="primary-description">
+            <h3>
+              <span data-variable="primary_upper_trigram_emoji"></span>/<span data-variable="primary_lower_trigram_emoji"></span>
+              <span data-variable="primary_name"></span>
+            </h3>
+            <p><span data-variable="primary_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="primary_description_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="primary-judgement">
+            <h4>Judgment</h4>
+            <h5><span data-variable="primary_judgement"></span></h5>
+            <p><span data-variable="primary_judgement_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="primary_judgement_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="primary-image">
+            <h4>Image</h4>
+            <h5><span data-variable="primary_image"></span></h5>
+            <p><span data-variable="primary_image_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="primary_image_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+
+          <h4>Lines</h4>
+          <div class="line-item note-section" data-line="1" data-note="line-1">
+            <h5>Line 1: <span data-variable="line_1"></span></h5>
+            <p><span data-variable="line_1_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="line_1_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+          <div class="line-item note-section" data-line="2" data-note="line-2">
+            <h5>Line 2: <span data-variable="line_2"></span></h5>
+            <p><span data-variable="line_2_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="line_2_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+          <div class="line-item note-section" data-line="3" data-note="line-3">
+            <h5>Line 3: <span data-variable="line_3"></span></h5>
+            <p><span data-variable="line_3_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="line_3_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+          <div class="line-item note-section" data-line="4" data-note="line-4">
+            <h5>Line 4: <span data-variable="line_4"></span></h5>
+            <p><span data-variable="line_4_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="line_4_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+          <div class="line-item note-section" data-line="5" data-note="line-5">
+            <h5>Line 5: <span data-variable="line_5"></span></h5>
+            <p><span data-variable="line_5_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="line_5_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+          <div class="line-item note-section" data-line="6" data-note="line-6">
+            <h5>Line 6: <span data-variable="line_6"></span></h5>
+            <p><span data-variable="line_6_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="line_6_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="resulting-description">
+            <h3>
+              <span data-variable="resulting_upper_trigram_emoji"></span>/<span data-variable="resulting_lower_trigram_emoji"></span>
+              <span data-variable="resulting_name"></span>
+            </h3>
+            <p><span data-variable="resulting_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="resulting_description_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="resulting-judgement">
+            <h4>Judgment</h4>
+            <h5><span data-variable="resulting_judgement"></span></h5>
+            <p><span data-variable="resulting_judgement_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="resulting_judgement_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="resulting-image">
+            <h4>Image</h4>
+            <h5><span data-variable="resulting_image"></span></h5>
+            <p><span data-variable="resulting_image_description"></span></p>
+          </div>
+          <textarea
+            class="note-field"
+            name="resulting_image_notes"
+            placeholder="add notes here"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="question-1">
+            <h4 data-variable="question_1"></h4>
+          </div>
+          <textarea
+            class="note-field"
+            name="question_1_notes"
+            placeholder="Add notes about the question"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="question-2">
+            <h4 data-variable="question_2"></h4>
+          </div>
+          <textarea
+            class="note-field"
+            name="question_2_notes"
+            placeholder="Add notes about the question"
+            hidden
+          ></textarea>
+
+          <div class="note-section" data-note="question-3"> 
+            <h4 data-variable="question_3"></h4>
+          </div>
+          <textarea
+            class="note-field"
+            name="question_3_notes"
+            placeholder="Add notes about the question"
+            hidden
+          ></textarea>
+
+        </section>
+        <button type="submit">Save notes</button>
+      </form>
+      <p data-error></p>
+    </main>
+    <script src="../../app.js"></script>
+    <script src="reading-form.js"></script>
+  </body>
+</html>

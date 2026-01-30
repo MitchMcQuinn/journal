@@ -3,7 +3,7 @@ const STORAGE_KEY = "n8nFormDemoState";
 let isBusy = false;
 const DEFAULT_STATUS_MESSAGE = "Waiting for response...";
 
-const defaultState = () => ({ variables: {}, form: {} });
+const defaultState = () => ({ variables: {}, form: {}, initialized: false });
 
 const readState = () => {
   try {
@@ -15,6 +15,7 @@ const readState = () => {
     return {
       variables: parsed.variables || {},
       form: parsed.form || {},
+      initialized: Boolean(parsed.initialized),
     };
   } catch (error) {
     return defaultState();
@@ -23,6 +24,10 @@ const readState = () => {
 
 const writeState = (state) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+};
+
+const clearState = () => {
+  localStorage.removeItem(STORAGE_KEY);
 };
 
 const mergeVariables = (state, variables) => {
@@ -198,6 +203,14 @@ const hydratePage = () => {
   });
 };
 
+const bindResetState = () => {
+  document.querySelectorAll("[data-reset-state]").forEach((el) => {
+    el.addEventListener("click", () => {
+      clearState();
+    });
+  });
+};
+
 const handleInitialization = async (config) => {
   if (!config.initialization || !config.initialization.webhook_url) {
     throw new Error("Initialization webhook_url is missing in config.json");
@@ -217,6 +230,7 @@ const handleInitialization = async (config) => {
   const response = await postJson(config.initialization.webhook_url, payload);
   const responseVariables = normalizeResponseVariables(response);
   let nextState = mergeVariables(state, responseVariables);
+  nextState.initialized = true;
   writeState(nextState);
 
   const nextStep =
@@ -227,6 +241,33 @@ const handleInitialization = async (config) => {
   window.location.href = nextStep;
 };
 
+const initializeIfNeeded = async (config) => {
+  if (!config.initialization?.webhook_url) {
+    return;
+  }
+
+  const state = readState();
+  if (state.initialized) {
+    return;
+  }
+
+  const requestVariables = getRequestVariables(
+    config.initialization.request_variables,
+    state.variables,
+  );
+  const payload = {
+    init: true,
+    variables: requestVariables,
+    form: state.form,
+  };
+
+  const response = await postJson(config.initialization.webhook_url, payload);
+  const responseVariables = normalizeResponseVariables(response);
+  let nextState = mergeVariables(state, responseVariables);
+  nextState.initialized = true;
+  writeState(nextState);
+};
+
 const handleForm = async (config) => {
   const form = document.querySelector("[data-n8n-form]");
   if (!form) {
@@ -234,7 +275,6 @@ const handleForm = async (config) => {
   }
 
   const currentPage = getCurrentPage();
-  const stepConfig = config.steps_by_page?.[currentPage] || {};
   if (!config.initialization?.webhook_url) {
     throw new Error("Initialization webhook_url is missing in config.json");
   }
@@ -260,22 +300,21 @@ const handleForm = async (config) => {
       payloadData[key] = value;
     });
 
-    const state = readState();
-    const requestVariables = buildRequestVariables({
-      stateVariables: state.variables,
-      configVariables: stepConfig.request_variables,
-      formVariables: parseDataJson(formVars, "form data-request-variables"),
-      actionVariables: parseDataJson(
-        submitterVars,
-        "button data-request-variables",
-      ),
-    });
-    const payload = {
-      form: payloadData,
-      variables: requestVariables,
-    };
-
     try {
+      const state = readState();
+      const requestVariables = buildRequestVariables({
+        stateVariables: state.variables,
+        formVariables: parseDataJson(formVars, "form data-request-variables"),
+        actionVariables: parseDataJson(
+          submitterVars,
+          "button data-request-variables",
+        ),
+      });
+      const payload = {
+        form: payloadData,
+        variables: requestVariables,
+      };
+
       setBusy(true, submitterStatus || formStatus || DEFAULT_STATUS_MESSAGE);
       const response = await postJson(
         config.initialization.webhook_url,
@@ -296,7 +335,7 @@ const handleForm = async (config) => {
         (response && response.next_step) ||
         submitterNextStep ||
         formNextStep ||
-        stepConfig.next_step_fallback;
+      null;
       if (!nextStep) {
         throw new Error("No next_step or fallback defined for this step.");
       }
@@ -319,9 +358,6 @@ const handleActionButtons = async (config) => {
     throw new Error("Initialization webhook_url is missing in config.json");
   }
 
-  const currentPage = getCurrentPage();
-  const stepConfig = config.steps_by_page?.[currentPage] || {};
-
   actionButtons.forEach((button) => {
     button.addEventListener("click", async (event) => {
       event.preventDefault();
@@ -332,11 +368,9 @@ const handleActionButtons = async (config) => {
 
       try {
         const buttonStatus = button.getAttribute("data-waiting-message");
-        setBusy(true, buttonStatus || DEFAULT_STATUS_MESSAGE);
         const state = readState();
         const requestVariables = buildRequestVariables({
           stateVariables: state.variables,
-          configVariables: stepConfig.request_variables,
           actionVariables: parseDataJson(
             button.getAttribute("data-request-variables"),
             "button data-request-variables",
@@ -348,6 +382,8 @@ const handleActionButtons = async (config) => {
           variables: requestVariables,
         };
 
+        setBusy(true, buttonStatus || DEFAULT_STATUS_MESSAGE);
+
         const response = await postJson(
           config.initialization.webhook_url,
           payload,
@@ -358,7 +394,7 @@ const handleActionButtons = async (config) => {
         const nextStep =
           (response && response.next_step) ||
           button.getAttribute("data-next-step-fallback") ||
-          stepConfig.next_step_fallback;
+          null;
         if (!nextStep) {
           throw new Error("No next_step or fallback defined for this action.");
         }
@@ -373,10 +409,10 @@ const handleActionButtons = async (config) => {
 };
 
 const init = async () => {
-  hydratePage();
   ensureStatusElement();
 
   try {
+    bindResetState();
     const config = await loadConfig();
     const currentPage = getCurrentPage();
 
@@ -385,6 +421,9 @@ const init = async () => {
       return;
     }
 
+    await initializeIfNeeded(config);
+    hydratePage();
+    document.dispatchEvent(new CustomEvent("n8n:hydrated"));
     await handleForm(config);
     await handleActionButtons(config);
   } catch (error) {

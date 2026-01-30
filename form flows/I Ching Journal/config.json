@@ -1,0 +1,11 @@
+{
+  "route": "i-ching",
+  "initialization": {
+    "webhook_url": "https://n8n.mitchiecraft.com/webhook/b12267d5-dded-437b-9d92-345d09a5992f",
+    "request_variables": {
+      "flow": "i-ching-journal",
+      "step": "init"
+    },
+    "start_page": "manual-entry.html"
+  }
+}

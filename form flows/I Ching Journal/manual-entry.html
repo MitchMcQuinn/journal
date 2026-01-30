@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I Ching Casting</title>
+    <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="flow.css" />
+  </head>
+  <body data-page="page1">
+    <main>
+      <h1>I Ching Casting</h1>
+      <!-- Intro text can be overridden by init webhook via data-variable -->
+      <p data-variable="date">
+        Enter the upper and lower trigrams for the primary hexagram.
+      </p>
+      <!-- Main casting form; submits to n8n via app.js -->
+      <form
+        data-n8n-form
+        data-request-variables='{"flow":"i-ching-journal","step":"manual-entry"}'
+        data-next-step-fallback="reading-form.html"
+        data-waiting-message="Saving your casting..."
+      >
+        <!-- Primary hexagram is required -->
+        <fieldset>
+          <legend>Primary hexagram</legend>
+          <label for="primary-upper">Upper trigram</label>
+          <select id="primary-upper" name="primary_upper_trigram" required>
+            <option value="">Select a trigram</option>
+            <option value="Heaven" selected>☰ Heaven</option>
+            <option value="Lake">☱ Lake</option>
+            <option value="Fire">☲ Fire</option>
+            <option value="Thunder">☳ Thunder</option>
+            <option value="Wind/Wood">☴ Wind/Wood</option>
+            <option value="Water">☵ Water</option>
+            <option value="Mountain">☶ Mountain</option>
+            <option value="Earth">☷ Earth</option>
+          </select>
+          <label for="primary-lower">Lower trigram</label>
+          <select id="primary-lower" name="primary_lower_trigram" required>
+            <option value="">Select a trigram</option>
+            <option value="Heaven" selected>☰ Heaven</option>
+            <option value="Lake">☱ Lake</option>
+            <option value="Fire">☲ Fire</option>
+            <option value="Thunder">☳ Thunder</option>
+            <option value="Wind/Wood">☴ Wind/Wood</option>
+            <option value="Water">☵ Water</option>
+            <option value="Mountain">☶ Mountain</option>
+            <option value="Earth">☷ Earth</option>
+          </select>
+        </fieldset>
+
+        <!-- Resulting hexagram is optional, but must be complete if started -->
+        <fieldset>
+          <legend>Resulting hexagram (optional)</legend>
+          <label for="resulting-upper">Upper trigram</label>
+          <select id="resulting-upper" name="resulting_upper_trigram">
+            <option value="">Select a trigram</option>
+            <option value="Heaven">☰ Heaven</option>
+            <option value="Lake" selected>☱ Lake</option>
+            <option value="Fire">☲ Fire</option>
+            <option value="Thunder">☳ Thunder</option>
+            <option value="Wind/Wood">☴ Wind/Wood</option>
+            <option value="Water">☵ Water</option>
+            <option value="Mountain">☶ Mountain</option>
+            <option value="Earth">☷ Earth</option>
+          </select>
+          <label for="resulting-lower">Lower trigram</label>
+          <select id="resulting-lower" name="resulting_lower_trigram">
+            <option value="">Select a trigram</option>
+            <option value="Heaven">☰ Heaven</option>
+            <option value="Lake" selected>☱ Lake</option>
+            <option value="Fire">☲ Fire</option>
+            <option value="Thunder">☳ Thunder</option>
+            <option value="Wind/Wood">☴ Wind/Wood</option>
+            <option value="Water">☵ Water</option>
+            <option value="Mountain">☶ Mountain</option>
+            <option value="Earth">☷ Earth</option>
+          </select>
+        </fieldset>
+        <button type="submit">Continue</button>
+      </form>
+      <!-- Error surface for app.js or native validation -->
+      <p data-error></p>
+    </main>
+    <script src="../../app.js"></script>
+    <script>
+      // Enforce that resulting hexagram is a complete pair.
+      const enforceResultingPair = () => {
+        const upper = document.getElementById("resulting-upper");
+        const lower = document.getElementById("resulting-lower");
+        if (!upper || !lower) {
+          return;
+        }
+        const hasUpper = Boolean(upper.value);
+        const hasLower = Boolean(lower.value);
+        const needsPair = hasUpper !== hasLower;
+        const message = needsPair
+          ? "Please select both upper and lower trigrams for the resulting hexagram."
+          : "";
+        upper.setCustomValidity(message);
+        lower.setCustomValidity(message);
+      };
+
+      // Prevent the primary and resulting hexagrams from matching exactly.
+      const enforceDistinctHexagrams = () => {
+        const primaryUpper = document.getElementById("primary-upper");
+        const primaryLower = document.getElementById("primary-lower");
+        const resultingUpper = document.getElementById("resulting-upper");
+        const resultingLower = document.getElementById("resulting-lower");
+        if (!primaryUpper || !primaryLower || !resultingUpper || !resultingLower) {
+          return;
+        }
+        const hasResulting = Boolean(resultingUpper.value || resultingLower.value);
+        const isSame =
+          primaryUpper.value &&
+          primaryLower.value &&
+          resultingUpper.value &&
+          resultingLower.value &&
+          primaryUpper.value === resultingUpper.value &&
+          primaryLower.value === resultingLower.value;
+        const message =
+          hasResulting && isSame
+            ? "Primary and resulting hexagrams cannot be identical."
+            : "";
+        resultingUpper.setCustomValidity(message);
+        resultingLower.setCustomValidity(message);
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Bind validation to any trigram changes and on submit.
+        const upper = document.getElementById("resulting-upper");
+        const lower = document.getElementById("resulting-lower");
+        if (!upper || !lower) {
+          return;
+        }
+        upper.addEventListener("change", enforceResultingPair);
+        lower.addEventListener("change", enforceResultingPair);
+        upper.addEventListener("change", enforceDistinctHexagrams);
+        lower.addEventListener("change", enforceDistinctHexagrams);
+        const primaryUpper = document.getElementById("primary-upper");
+        const primaryLower = document.getElementById("primary-lower");
+        if (primaryUpper && primaryLower) {
+          primaryUpper.addEventListener("change", enforceDistinctHexagrams);
+          primaryLower.addEventListener("change", enforceDistinctHexagrams);
+        }
+        const form = document.querySelector("[data-n8n-form]");
+        if (form) {
+          form.addEventListener("submit", enforceResultingPair);
+          form.addEventListener("submit", enforceDistinctHexagrams);
+        }
+      });
+    </script>
+  </body>
+</html>

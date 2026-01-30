@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 32px;
   background: #f7f7f8;
-  color: #1f1f23;
+  color: #000000;
 }
 
 main {
@@ -70,4 +70,8 @@ textarea[disabled] {
 [data-error] {
   color: #b91c1c;
   margin-top: 12px;
+}
+
+.index-page {
+  background-color: #000000;
 }

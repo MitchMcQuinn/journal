@@ -1,0 +1,50 @@
+body {
+  background: #0c0d10;
+  color: #e5e7eb;
+}
+
+main {
+  background: #111317;
+  box-shadow: none;
+  border: 1px solid #1f2937;
+}
+
+label,
+legend,
+h1,
+h2 {
+  color: #f3f4f6;
+}
+
+p {
+  color: #9ca3af;
+}
+
+input,
+textarea {
+  background: #0b0c0f;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid #4b5563;
+  outline-offset: 2px;
+}
+
+button {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+fieldset {
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 16px;
+}
+
+[data-error] {
+  color: #f87171;
+}

@@ -9,14 +9,27 @@
   </head>
   <body data-page="results">
     <main>
-      <p><a class="button-link" href="/i-ching">Cast Again</a></p>
+      <p><a class="button-link" href="/i-ching" data-reset-state>Cast Again</a></p>
       <span data-variable="changing_lines" hidden></span>
       <form
         data-n8n-form
         data-request-variables='{"flow":"i-ching-journal","step":"reading-form"}'
         data-next-step-fallback="summary.html"
         data-waiting-message="Saving your notes..."
+        autocomplete="off"
       >
+        <input type="hidden" name="reference_primary_description" data-reference-field />
+        <input type="hidden" name="reference_primary_judgement" data-reference-field />
+        <input type="hidden" name="reference_primary_image" data-reference-field />
+        <input type="hidden" name="reference_line_1" data-reference-field />
+        <input type="hidden" name="reference_line_2" data-reference-field />
+        <input type="hidden" name="reference_line_3" data-reference-field />
+        <input type="hidden" name="reference_line_4" data-reference-field />
+        <input type="hidden" name="reference_line_5" data-reference-field />
+        <input type="hidden" name="reference_line_6" data-reference-field />
+        <input type="hidden" name="reference_resulting_description" data-reference-field />
+        <input type="hidden" name="reference_resulting_judgement" data-reference-field />
+        <input type="hidden" name="reference_resulting_image" data-reference-field />
         <section>
           <div class="note-section" data-note="casting">
             <h1>

@@ -36,6 +36,21 @@ const applyChangingLines = () => {
   });
 };
 
+const applyCastingType = () => {
+  const typeEl = document.querySelector("[data-variable='casting_type']");
+  const castingType = typeEl ? typeEl.textContent.trim().toLowerCase() : "";
+  const isStatic = castingType === "static";
+  document.querySelectorAll("[data-casting-role='transition']").forEach((el) => {
+    el.hidden = isStatic;
+  });
+  document.querySelectorAll("[data-section='lines']").forEach((el) => {
+    el.hidden = isStatic;
+  });
+  document.querySelectorAll("[data-section='resulting']").forEach((el) => {
+    el.hidden = isStatic;
+  });
+};
+
 const closeEmptyNoteFields = () => {
   document.querySelectorAll(".note-field").forEach((field) => {
     const value = field.value ? field.value.trim() : "";
@@ -99,23 +114,6 @@ const buildTabGroup = (sectionEl, index) => {
     group.setAttribute("data-line", sectionEl.getAttribute("data-line"));
   }
 
-  const menu = document.createElement("div");
-  menu.className = "tab-menu";
-
-  const readingButton = document.createElement("button");
-  readingButton.type = "button";
-  readingButton.className = "tab-button is-active";
-  readingButton.setAttribute("data-tab-target", "reading");
-  readingButton.textContent = "Reading";
-
-  const referenceButton = document.createElement("button");
-  referenceButton.type = "button";
-  referenceButton.className = "tab-button";
-  referenceButton.setAttribute("data-tab-target", "reference");
-  referenceButton.textContent = "Reference";
-
-  menu.append(readingButton, referenceButton);
-
   const readingPanel = document.createElement("div");
   readingPanel.className = "tab-panel";
   readingPanel.setAttribute("data-tab-panel", "reading");
@@ -145,7 +143,7 @@ const buildTabGroup = (sectionEl, index) => {
 
   referencePanel.append(referenceDisplay, referenceField);
 
-  group.append(menu, readingPanel, referencePanel);
+  group.append(readingPanel, referencePanel);
 
   sectionEl.parentNode.insertBefore(group, sectionEl);
   readingPanel.append(sectionEl, noteField);
@@ -160,6 +158,28 @@ const initTabs = () => {
       return;
     }
     buildTabGroup(section, index);
+  });
+};
+
+const setGlobalTab = (mode) => {
+  const isReference = mode === "reference";
+  document.querySelectorAll(".global-tabs .tab-button").forEach((button) => {
+    button.classList.toggle(
+      "is-active",
+      button.getAttribute("data-global-tab") === mode,
+    );
+  });
+  document.querySelectorAll("[data-tab-panel='reading']").forEach((panel) => {
+    panel.toggleAttribute("hidden", isReference);
+  });
+  document.querySelectorAll("[data-tab-panel='reference']").forEach((panel) => {
+    panel.toggleAttribute("hidden", !isReference);
+  });
+  const visiblePanels = document.querySelectorAll("[data-tab-panel]:not([hidden])");
+  visiblePanels.forEach((panel) => {
+    panel.querySelectorAll("textarea").forEach((field) => {
+      autoResizeField(field);
+    });
   });
 };
 
@@ -203,6 +223,7 @@ const syncReferenceFields = () => {
 const scheduleApply = () => {
   requestAnimationFrame(() => {
     applyChangingLines();
+    applyCastingType();
   });
 };
 
@@ -210,11 +231,13 @@ document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   updateReferenceFieldsFromState();
   syncReferenceFields();
+  setGlobalTab("reading");
   scheduleApply();
 });
 document.addEventListener("n8n:hydrated", () => {
   updateReferenceFieldsFromState();
   syncReferenceFields();
+  setGlobalTab("reading");
   scheduleApply();
 });
 
@@ -230,28 +253,11 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  const button = event.target.closest(".tab-button");
+  const button = event.target.closest("[data-global-tab]");
   if (!button) {
     return;
   }
-  const group = button.closest(".note-tabs");
-  if (!group) {
-    return;
-  }
-  const target = button.getAttribute("data-tab-target");
-  group.querySelectorAll(".tab-button").forEach((btn) => {
-    btn.classList.toggle("is-active", btn === button);
-  });
-  group.querySelectorAll("[data-tab-panel]").forEach((panel) => {
-    const panelKey = panel.getAttribute("data-tab-panel");
-    panel.toggleAttribute("hidden", panelKey !== target);
-  });
-  const activePanel = group.querySelector("[data-tab-panel]:not([hidden])");
-  if (activePanel) {
-    activePanel.querySelectorAll("textarea").forEach((field) => {
-      autoResizeField(field);
-    });
-  }
+  setGlobalTab(button.getAttribute("data-global-tab"));
 });
 
 document.addEventListener("click", (event) => {

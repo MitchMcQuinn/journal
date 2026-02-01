@@ -6,6 +6,6 @@
       "flow": "i-ching-journal",
       "step": "init"
     },
-    "start_page": "manual-entry.html"
+    "start_page": "archive.html"
   }
 }

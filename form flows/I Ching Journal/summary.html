@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="flow.css" />
   </head>
   <body data-page="summary">
+    <div data-shared-header></div>
     <main>
-      <p><a class="button-link" href="/i-ching" data-reset-state>Cast Again</a></p>
-      <h1>Journal Summary</h1>
-      <p>Here are your notes from this reading.</p>
+      <h1 data-form="title">Journal Summary</h1>
+      <p data-form="casting_notes"></p>
 
       <section>
         <div class="summary-block" data-summary-block>
@@ -25,22 +25,21 @@
         </div>
 
         <div class="summary-block" data-summary-block>
-          <h2>Primary description</h2>
           <p><span data-form="primary_description_notes">—</span></p>
         </div>
 
         <div class="summary-block" data-summary-block>
-          <h2>Primary judgment</h2>
+          <h2>Judgement</h2>
           <p><span data-form="primary_judgement_notes">—</span></p>
         </div>
 
         <div class="summary-block" data-summary-block>
-          <h2>Primary image</h2>
+          <h2>Image</h2>
           <p><span data-form="primary_image_notes">—</span></p>
         </div>
 
         <div class="summary-block" data-summary-lines>
-          <h2>Changing lines</h2>
+          <h2>Lines</h2>
           <div class="summary-line" data-line="1">
             <h3>Line 1</h3>
             <p><span data-form="line_1_notes">—</span></p>
@@ -68,17 +67,17 @@
         </div>
 
         <div class="summary-block" data-summary-block>
-          <h2>Resulting description</h2>
+          <h2>Description</h2>
           <p><span data-form="resulting_description_notes">—</span></p>
         </div>
 
         <div class="summary-block" data-summary-block>
-          <h2>Resulting judgment</h2>
+          <h2>Judgement</h2>
           <p><span data-form="resulting_judgement_notes">—</span></p>
         </div>
 
         <div class="summary-block" data-summary-block>
-          <h2>Resulting image</h2>
+          <h2>Image</h2>
           <p><span data-form="resulting_image_notes">—</span></p>
         </div>
       </section>
@@ -87,5 +86,6 @@
     </main>
     <script src="../../app.js"></script>
     <script src="summary.js"></script>
+    <script src="shared-header.js"></script>
   </body>
 </html>

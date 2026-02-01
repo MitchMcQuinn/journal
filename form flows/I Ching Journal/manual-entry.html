@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="flow.css" />
   </head>
   <body data-page="page1">
+    <div data-shared-header></div>
     <main>
       <h1>I Ching Casting</h1>
       <!-- Intro text can be overridden by init webhook via data-variable -->
@@ -21,6 +22,7 @@
         data-next-step-fallback="reading-form.html"
         data-waiting-message="Consulting the oracle..."
       >
+        <input type="hidden" name="casting_type" value="static" />
         <!-- Primary hexagram is required -->
         <fieldset>
           <legend>Primary hexagram</legend>
@@ -84,6 +86,7 @@
       <p data-error></p>
     </main>
     <script src="../../app.js"></script>
+    <script src="shared-header.js"></script>
     <script>
       // Enforce that resulting hexagram is a complete pair.
       const enforceResultingPair = () => {
@@ -146,8 +149,20 @@
         }
         const form = document.querySelector("[data-n8n-form]");
         if (form) {
+          const castingTypeInput = form.querySelector("input[name='casting_type']");
+          const updateCastingType = () => {
+            if (!castingTypeInput) {
+              return;
+            }
+            const hasResulting = Boolean(upper.value || lower.value);
+            castingTypeInput.value = hasResulting ? "transitioning" : "static";
+          };
+          upper.addEventListener("change", updateCastingType);
+          lower.addEventListener("change", updateCastingType);
+          updateCastingType();
           form.addEventListener("submit", enforceResultingPair);
           form.addEventListener("submit", enforceDistinctHexagrams);
+          form.addEventListener("submit", updateCastingType);
         }
       });
     </script>

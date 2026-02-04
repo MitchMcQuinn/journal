@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../styles.css" />
     <link rel="stylesheet" href="flow.css" />
   </head>
-  <body data-page="archive">
+  <body data-page="archive" data-wait-for-response="true">
     <div data-shared-header></div>
     <main class="archive-layout">
       <aside class="archive-nav">
@@ -19,7 +19,9 @@
       </aside>
     </main>
     <p data-error></p>
+    <script src="../../app.js"></script>
     <script src="archive.js"></script>
-    <script src="shared-header.js"></script>
+    <script src="header.js"></script>
+    <script src="page-load.js"></script>
   </body>
 </html>

@@ -1,3 +1,5 @@
+// Normalize changing lines from API into a clean array of line numbers.
+// Accepts JSON arrays (e.g. ["3","6"]) or comma-separated strings ("3, 6").
 const parseChangingLines = (rawValue) => {
   if (!rawValue) {
     return [];
@@ -23,6 +25,9 @@ const parseChangingLines = (rawValue) => {
     .filter(Boolean);
 };
 
+// Hide or show each line group based on the changing_lines array.
+// To use: render a hidden element with data-variable="changing_lines"
+// (JSON array string or comma-separated line numbers).
 const applyChangingLines = () => {
   const changingLinesEl = document.querySelector("[data-variable='changing_lines']");
   const rawValue = changingLinesEl ? changingLinesEl.textContent : "";
@@ -36,21 +41,8 @@ const applyChangingLines = () => {
   });
 };
 
-const applyCastingType = () => {
-  const typeEl = document.querySelector("[data-variable='casting_type']");
-  const castingType = typeEl ? typeEl.textContent.trim().toLowerCase() : "";
-  const isStatic = castingType === "static";
-  document.querySelectorAll("[data-casting-role='transition']").forEach((el) => {
-    el.hidden = isStatic;
-  });
-  document.querySelectorAll("[data-section='lines']").forEach((el) => {
-    el.hidden = isStatic;
-  });
-  document.querySelectorAll("[data-section='resulting']").forEach((el) => {
-    el.hidden = isStatic;
-  });
-};
 
+// Close any note inputs that are still empty to reduce visual clutter.
 const closeEmptyNoteFields = () => {
   document.querySelectorAll(".note-field").forEach((field) => {
     const value = field.value ? field.value.trim() : "";
@@ -60,6 +52,7 @@ const closeEmptyNoteFields = () => {
   });
 };
 
+// Auto-resize textareas to fit their content.
 const autoResizeField = (field) => {
   if (!field) {
     return;
@@ -68,6 +61,8 @@ const autoResizeField = (field) => {
   field.style.height = `${field.scrollHeight}px`;
 };
 
+// Toggle a note field open; close other empty note fields first.
+// To use: place a textarea.note-field immediately after each .note-section.
 const toggleNoteField = (sectionEl) => {
   const noteField = sectionEl.nextElementSibling;
   if (!noteField || !noteField.classList.contains("note-field")) {
@@ -82,6 +77,7 @@ const toggleNoteField = (sectionEl) => {
   }
 };
 
+// Read the shared state that app.js stores in localStorage.
 const getStoredState = () => {
   try {
     const raw = localStorage.getItem("n8nFormDemoState");
@@ -98,6 +94,9 @@ const getStoredState = () => {
   }
 };
 
+// Wrap each note section into a tab group with Reading + Reference panels.
+// To use: ensure each .note-section has data-note="key" and a following
+// textarea.note-field. Hidden inputs with name="reference_<key>" should exist.
 const buildTabGroup = (sectionEl, index) => {
   const noteField = sectionEl.nextElementSibling;
   if (!noteField || !noteField.classList.contains("note-field")) {
@@ -149,6 +148,8 @@ const buildTabGroup = (sectionEl, index) => {
   readingPanel.append(sectionEl, noteField);
 };
 
+// Build tab groups for all note sections except ones explicitly skipped.
+// To use: update skipNotes to exclude sections that should not show reference tabs.
 const initTabs = () => {
   const sections = Array.from(document.querySelectorAll(".note-section"));
   const skipNotes = new Set(["casting", "question-1", "question-2", "question-3"]);
@@ -161,6 +162,8 @@ const initTabs = () => {
   });
 };
 
+// Toggle all tab panels between Reading and Reference globally.
+// To use: include .global-tabs buttons with data-global-tab="reading|reference".
 const setGlobalTab = (mode) => {
   const isReference = mode === "reference";
   document.querySelectorAll(".global-tabs .tab-button").forEach((button) => {
@@ -183,6 +186,8 @@ const setGlobalTab = (mode) => {
   });
 };
 
+// Populate reference inputs from stored variables.
+// To use: store reference_<key> values in localStorage under n8nFormDemoState.variables.
 const updateReferenceFieldsFromState = () => {
   const referenceState = getStoredState();
   document.querySelectorAll(".reference-field").forEach((field) => {
@@ -204,6 +209,8 @@ const updateReferenceFieldsFromState = () => {
   });
 };
 
+// Sync reference textareas into hidden form inputs for submission.
+// To use: add hidden inputs with data-reference-field and name="reference_<key>".
 const syncReferenceFields = () => {
   document.querySelectorAll(".reference-field").forEach((field) => {
     const sectionKey = field.getAttribute("data-reference-section");
@@ -220,13 +227,14 @@ const syncReferenceFields = () => {
   });
 };
 
+// Batch UI updates that depend on hydrated data.
 const scheduleApply = () => {
   requestAnimationFrame(() => {
     applyChangingLines();
-    applyCastingType();
   });
 };
 
+// Initial setup: build tabs, populate reference fields, show Reading view.
 document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   updateReferenceFieldsFromState();
@@ -234,6 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setGlobalTab("reading");
   scheduleApply();
 });
+// Re-apply state-driven updates once variables are hydrated by app.js.
 document.addEventListener("n8n:hydrated", () => {
   updateReferenceFieldsFromState();
   syncReferenceFields();
@@ -241,6 +250,7 @@ document.addEventListener("n8n:hydrated", () => {
   scheduleApply();
 });
 
+// Clicking a reading section opens its note field (if present).
 document.addEventListener("click", (event) => {
   if (event.target.closest(".note-field")) {
     return;
@@ -252,6 +262,7 @@ document.addEventListener("click", (event) => {
   toggleNoteField(section);
 });
 
+// Global tab toggle (Reading/Reference).
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-global-tab]");
   if (!button) {
@@ -260,6 +271,9 @@ document.addEventListener("click", (event) => {
   setGlobalTab(button.getAttribute("data-global-tab"));
 });
 
+// Clicking the reference display swaps it into an editable textarea.
+// To use: render a .reference-display element paired with a hidden
+// textarea.reference-field that shares the same data-reference-section value.
 document.addEventListener("click", (event) => {
   const display = event.target.closest(".reference-display");
   if (!display) {
@@ -278,6 +292,7 @@ document.addEventListener("click", (event) => {
   autoResizeField(field);
 });
 
+// Resize textareas as the user types and keep hidden inputs in sync.
 document.addEventListener("input", (event) => {
   const field = event.target;
   if (
@@ -300,6 +315,7 @@ document.addEventListener("input", (event) => {
   }
 });
 
+// When leaving a reference textarea, collapse back to static display.
 document.addEventListener(
   "blur",
   (event) => {
@@ -320,6 +336,7 @@ document.addEventListener(
   true,
 );
 
+// Ensure all visible textareas are sized correctly after layout.
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".note-field, .reference-field").forEach((field) => {
     autoResizeField(field);
@@ -327,6 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
   syncReferenceFields();
 });
 
+// Re-size textareas when hydrated content arrives.
 document.addEventListener("n8n:hydrated", () => {
   document.querySelectorAll(".note-field, .reference-field").forEach((field) => {
     autoResizeField(field);

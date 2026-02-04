@@ -22,10 +22,19 @@
         data-next-step-fallback="reading-form.html"
         data-waiting-message="Consulting the oracle..."
       >
+        <label for="casting-query">Query</label>
+        <input
+          id="casting-query"
+          name="casting_query"
+          type="text"
+          placeholder="Enter your question or query"
+          value="Daily Consultation"
+          autocomplete="off"
+        />
         <input type="hidden" name="casting_type" value="static" />
         <!-- Primary hexagram is required -->
         <fieldset>
-          <legend>Primary hexagram</legend>
+          <legend><h2>Primary hexagram</h2></legend>
           <label for="primary-upper">Upper trigram</label>
           <select id="primary-upper" name="primary_upper_trigram" required>
             <option value="">Select a trigram</option>
@@ -54,7 +63,7 @@
 
         <!-- Resulting hexagram is optional, but must be complete if started -->
         <fieldset>
-          <legend>Resulting hexagram (optional)</legend>
+          <legend><h2>Resulting hexagram (optional)</h2></legend>
           <label for="resulting-upper">Upper trigram</label>
           <select id="resulting-upper" name="resulting_upper_trigram">
             <option value="">Select a trigram</option>
@@ -86,7 +95,8 @@
       <p data-error></p>
     </main>
     <script src="../../app.js"></script>
-    <script src="shared-header.js"></script>
+    <script src="header.js"></script>
+    <script src="page-load.js"></script>
     <script>
       // Enforce that resulting hexagram is a complete pair.
       const enforceResultingPair = () => {

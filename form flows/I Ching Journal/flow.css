@@ -8,6 +8,19 @@ body {
   background-attachment: fixed;
 }
 
+body[data-wait-for-response="true"] main {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
+
+body[data-content-ready="true"] main {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: opacity 280ms ease, transform 280ms ease;
+}
+
 .flow-header {
   display: flex;
   align-items: center;
@@ -34,7 +47,7 @@ body {
 }
 
 main {
-  background: rgba(17, 19, 23, 0.7);
+  background: rgba(17, 19, 23, 0.3);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
   border: 0px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(16px) saturate(120%);
@@ -52,10 +65,15 @@ p {
   color: #9ca3af;
 }
 
+[data-variable],
+[data-form] {
+  white-space: pre-wrap;
+}
+
 input,
 textarea {
   background: #0b0c0f;
-  border: 1px solid #374151;
+  border: 0px solid #374151;
   color: #e5e7eb;
   width: 100%;
   resize: none;
@@ -78,13 +96,13 @@ button {
   justify-content: flex-end;
   gap: 8px;
   margin: 16px 0 0;
-  border-bottom: 1px solid #1f2937;
+  border-bottom: 0px solid #1f2937;
 }
 
 .tab-button {
   background: #0b0c0f;
   color: #f3f4f6;
-  border: 1px solid #1f2937;
+  border: 0px solid #1f2937;
   border-bottom: none;
   border-radius: 6px 6px 0 0;
   padding: 6px 10px 5px;
@@ -98,9 +116,35 @@ button {
 }
 
 .tab-panel {
-  border: 1px solid #1f2937;
+  border: 0px solid #1f2937;
   border-top: none;
   padding: 12px;
+}
+
+.reading-panel {
+  padding: 12px;
+}
+
+[data-section="lines"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.line-item {
+  padding-left: 0;
+}
+
+.line-item h5,
+.line-item p {
+  margin-left: 0;
+}
+
+.lines-title {
+  padding-left: 12px;
+}
+
+.questions-title {
+  padding-left: 12px;
 }
 
 .reference-display {
@@ -111,7 +155,7 @@ button {
 }
 
 fieldset {
-  border: 1px solid #1f2937;
+  border: 0px solid #1f2937;
   border-radius: 10px;
   margin-top: 20px;
   padding: 16px;
@@ -162,6 +206,18 @@ fieldset {
   border-radius: 8px;
 }
 
+.archive-item-title {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.archive-item-subtitle {
+  display: block;
+  margin-top: 2px;
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
 .archive-item:hover {
   border-color: #374151;
   background: #0b0c0f;
@@ -181,4 +237,42 @@ fieldset {
 .archive-field {
   padding: 12px 0;
   border-bottom: 1px solid #1f2937;
+}
+
+.extra-fade {
+  opacity: 0.2;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 1.2rem;
+}
+
+h3 {
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
+h4 {
+  margin-bottom: 0;
+  font-size: 0.8rem;
+}
+
+h5 {
+  margin-bottom: 0;
+  font-size: 0.6rem;
+}
+
+p {
+  margin-bottom: 0;
+  font-size: 0.8rem;
+}
+
+.display-none {
+  display: none;
 }

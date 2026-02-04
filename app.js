@@ -424,6 +424,7 @@ const init = async () => {
     await initializeIfNeeded(config);
     hydratePage();
     document.dispatchEvent(new CustomEvent("n8n:hydrated"));
+    document.dispatchEvent(new CustomEvent("page:data-ready"));
     await handleForm(config);
     await handleActionButtons(config);
   } catch (error) {

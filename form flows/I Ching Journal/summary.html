@@ -3,39 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>I Ching Journal - Summary</title>
+    <title data-form="title"></title>
     <link rel="stylesheet" href="../../styles.css" />
     <link rel="stylesheet" href="flow.css" />
   </head>
   <body data-page="summary">
     <div data-shared-header></div>
     <main>
-      <h1 data-form="title">Journal Summary</h1>
-      <p data-form="casting_notes"></p>
+      <span data-variable="changing_lines" hidden></span>
+      <h1 data-variable="title"></h1>
+      <div class="global-tabs">
+        <button type="button" class="tab-button is-active" data-summary-tab="notes">
+          Notes
+        </button>
+        <button type="button" class="tab-button" data-summary-tab="reading">
+          Reading
+        </button>
+      </div>
+      <!--Notes Tab Content-->
+      <section data-summary-panel="notes">
 
-      <section>
         <div class="summary-block" data-summary-block>
-          <h2>Casting title</h2>
-          <p><span data-form="casting_title_notes">—</span></p>
+          <h1 data-variable="heading_1"></h1>
+          <p><span data-variable="complete_overview">—</span></p>
+          <p><span data-form="casting_notes">—</span></p>
+          <span><h1 data-variable="heading_1" unhide class="extra-fade"></h1></span>
+          <p><span data-variable="complete_overview" unhide class="extra-fade">—</span></p>          
+          <p><span unhide class="extra-fade">[no notes about the casting to display]</span></p>
         </div>
 
-        <div class="summary-block" data-summary-block>
-          <h2>Primary ➔ Resulting</h2>
-          <p><span data-form="primary_resulting_title_notes">—</span></p>
-        </div>
+        <br></br>
+        <hr class="divider extra-fade">
 
         <div class="summary-block" data-summary-block>
-          <p><span data-form="primary_description_notes">—</span></p>
+          <h1 data-variable="primary_title"></h1>
+          <p><span data-form="primary_hexagram_notes">—</span></p>
+          <h1 data-variable="primary_title" unhide class="extra-fade"></h1>
+          <p><span unhide class="extra-fade">[no notes about the hexagram to display]</span></p>
         </div>
 
         <div class="summary-block" data-summary-block>
           <h2>Judgement</h2>
+          <h2 unhide class="extra-fade">Judgement</h2>
           <p><span data-form="primary_judgement_notes">—</span></p>
+          <p><span unhide class="extra-fade">[no notes about the judgement to display]</span></p>
         </div>
 
         <div class="summary-block" data-summary-block>
           <h2>Image</h2>
+          <h2 unhide class="extra-fade">Image</h2>
           <p><span data-form="primary_image_notes">—</span></p>
+          <p><span unhide class="extra-fade">[no notes about the image to display]</span></p>
+        </div>
+
+        <br></br> 
+        <hr class="divider extra-fade">
+
+        <div class="summary-block" data-summary-lines-empty>
+          <h1 unhide class="extra-fade">Changing Lines</h1>
+          <p><span unhide class="extra-fade">[no notes about the changing lines to display]</span></p>
         </div>
 
         <div class="summary-block" data-summary-lines>
@@ -65,27 +91,141 @@
             <p><span data-form="line_6_notes">—</span></p>
           </div>
         </div>
+        <br></br>
+        <hr class="divider extra-fade">
 
         <div class="summary-block" data-summary-block>
-          <h2>Description</h2>
-          <p><span data-form="resulting_description_notes">—</span></p>
+          <h1 data-variable="resulting_title"></h1>
+          <h1 data-variable="resulting_title" unhide class="extra-fade"></h1>
+          <p><span data-form="resulting_hexagram_notes">—</span></p>
+          <p><span unhide class="extra-fade">[no notes about the resulting hexagram to display]</span></p>
         </div>
 
         <div class="summary-block" data-summary-block>
           <h2>Judgement</h2>
+          <h2 unhide class="extra-fade">Judgement</h2>
           <p><span data-form="resulting_judgement_notes">—</span></p>
+          <p><span unhide class="extra-fade">[no notes about the judgement to display]</span></p>
         </div>
 
-        <div class="summary-block" data-summary-block>
+          <div class="summary-block" data-summary-block>
           <h2>Image</h2>
+          <h2 unhide class="extra-fade">Image</h2>
           <p><span data-form="resulting_image_notes">—</span></p>
+          <p><span unhide class="extra-fade">[no notes about the image to display]</span></p>
         </div>
+
+        <br></br>
+        <hr class="divider extra-fade">
+
+        <div class="summary-block" data-summary-questions-empty>
+          <h2>Reflective Questions</h2>
+          <h2 unhide class="extra-fade">Reflective Questions</h2>
+        </div>
+
+        <div class="summary-block question_1_block" data-summary-block>
+          <p class="display-none"><span data-form="question_1_notes">—</span></p> <!--Hidden line to support fallback logic -->
+          <h4><span data-variable="question_1"></span></h4>
+          <h4><span data-variable="question_1" unhide class="extra-fade"></span></h4>
+          <p><span data-form="question_1_notes">—</span></p>
+          <p><span unhide class="extra-fade">[no answer provided]</span></p>
+        </div>
+
+        <br></br>
+
+        <div class="summary-block question_2_block" data-summary-block>
+          <p class="display-none"><span data-form="question_2_notes">—</span></p> <!--Hidden line to support fallback logic -->
+          <h4><span data-variable="question_2"></span></h4>
+          <h4><span data-variable="question_2" unhide class="extra-fade"></span></h4>
+          <p><span data-form="question_2_notes">—</span></p>
+          <p><span unhide class="extra-fade">[no answer provided]</span></p>
+        </div>
+        
+        <br></br>
+
+        <div class="summary-block question_3_block" data-summary-block>
+          <p class="display-none"><span data-form="question_3_notes">—</span></p> <!--Hidden line to support fallback logic -->
+          <h4><span data-variable="question_3"></span></h4>
+          <h4><span data-variable="question_3" unhide class="extra-fade"></span></h4>
+          <p><span data-form="question_3_notes">—</span></p>
+          <p><span unhide class="extra-fade">[no answer provided]</span></p>
+        </div>
+
+        <br></br>
+
+        <button
+          type="button"
+          class="button-link"
+          data-n8n-action
+          data-request-variables='{"flow":"i-ching-journal","step":"edit"}'
+          data-next-step-fallback="edit.html"
+          data-waiting-message="Opening edit view..."
+        >
+          Edit
+        </button>
+      </section>
+
+      <!--Reading Tab Content-->
+      <section data-summary-panel="reading" hidden>
+        <h1>
+          <span data-variable="heading_1"></span>
+        </h1>
+        <h2>
+          <span data-variable="primary_title"></span>
+        </h2>
+        <p><span data-variable="primary_description"></span></p>
+        <h3>Judgement</h3>
+        <p><span data-variable="primary_judgement"></span></p>
+        <p><span data-variable="primary_judgement_description"></span></p>
+        <h3>Image</h3>
+        <p><span data-variable="primary_image"></span></p>
+        <p><span data-variable="primary_image_description"></span></p>
+        <h3>Lines</h3>
+        <div class="summary-line" data-line="1">
+          <h4>Line 1</h4>
+          <p><span data-variable="line_1"></span></p>
+          <p><span data-variable="line_1_description"></span></p>
+        </div>
+        <div class="summary-line" data-line="2">
+          <h4>Line 2</h4>
+          <p><span data-variable="line_2"></span></p>
+          <p><span data-variable="line_2_description"></span></p>
+        </div>
+        <div class="summary-line" data-line="3">
+          <h4>Line 3</h4>
+          <p><span data-variable="line_3"></span></p>
+          <p><span data-variable="line_3_description"></span></p>
+        </div>
+        <div class="summary-line" data-line="4">
+          <h4>Line 4</h4>
+          <p><span data-variable="line_4"></span></p>
+          <p><span data-variable="line_4_description"></span></p>
+        </div>
+        <div class="summary-line" data-line="5">
+          <h4>Line 5</h4>
+          <p><span data-variable="line_5"></span></p>
+          <p><span data-variable="line_5_description"></span></p>
+        </div>
+        <div class="summary-line" data-line="6">
+          <h4>Line 6</h4>
+          <p><span data-variable="line_6"></span></p>
+          <p><span data-variable="line_6_description"></span></p>
+        </div>
+        <h3>Resulting</h3>
+        <p><span data-variable="resulting_description"></span></p>
+        <h4>Judgment</h4>
+        <p><span data-variable="resulting_judgement"></span></p>
+        <p><span data-variable="resulting_judgement_description"></span></p>
+        <h4>Image</h4>
+        <p><span data-variable="resulting_image"></span></p>
+        <p><span data-variable="resulting_image_description"></span></p>
       </section>
 
       <p data-error></p>
     </main>
     <script src="../../app.js"></script>
     <script src="summary.js"></script>
-    <script src="shared-header.js"></script>
+    <script src="header.js"></script>
+    <script src="page-load.js"></script>
   </body>
 </html>

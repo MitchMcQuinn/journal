@@ -1,3 +1,20 @@
+const resetState = () => {
+  localStorage.removeItem("n8nFormDemoState");
+};
+
+const bindHeaderResets = (container) => {
+  if (!container) {
+    return;
+  }
+  container.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-reset-state]");
+    if (!link) {
+      return;
+    }
+    resetState();
+  });
+};
+
 const loadSharedHeader = async () => {
   const container = document.querySelector("[data-shared-header]");
   if (!container) {
@@ -10,6 +27,7 @@ const loadSharedHeader = async () => {
     }
     const html = await response.text();
     container.innerHTML = html;
+    bindHeaderResets(container);
   } catch (error) {
     // Ignore header load failures.
   }

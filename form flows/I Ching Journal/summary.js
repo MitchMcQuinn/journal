@@ -37,6 +37,19 @@ const parseChangingLines = (rawValue) => {
     .filter(Boolean);
 };
 
+// Hide elements marked as transitioning-only when casting_type is static.
+const applyCastingTypeVisibility = () => {
+  const variableEl = document.querySelector("[data-variable='casting_type']");
+  const formEl = document.querySelector("[data-form='casting_type']");
+  const variableValue = variableEl ? variableEl.textContent.trim() : "";
+  const formValue = formEl ? formEl.textContent.trim() : "";
+  const castingType = (variableValue || formValue).toLowerCase();
+  const isStatic = castingType === "static";
+  document.querySelectorAll("[transitioning-element]").forEach((el) => {
+    el.hidden = isStatic;
+  });
+};
+
 // Show only the changing lines inside the Reading tab.
 const applyReadingLineFilter = () => {
   const changingLinesEl = document.querySelector(
@@ -181,6 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
     hideEmptySummaryBlocks();
     hideEmptyQuestionBlocks();
     applyReadingLineFilter();
+    applyCastingTypeVisibility();
   });
   setSummaryTab("notes");
 });
@@ -192,6 +206,7 @@ document.addEventListener("n8n:hydrated", () => {
     hideEmptySummaryBlocks();
     hideEmptyQuestionBlocks();
     applyReadingLineFilter();
+    applyCastingTypeVisibility();
   });
   setSummaryTab("notes");
 });

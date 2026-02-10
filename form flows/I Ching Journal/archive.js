@@ -155,9 +155,11 @@ const loadArchiveList = async () => {
     throw new Error("Initialization webhook_url is missing in config.json");
   }
 
+  const baseVariables = config.initialization?.request_variables || {};
   const response = await postJson(webhookUrl, {
     variables: {
-      flow: "i-ching-journal",
+      ...baseVariables,
+      flow: baseVariables.flow || "i-ching-journal",
       step: "archive",
       archive: true,
     },

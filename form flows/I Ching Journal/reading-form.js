@@ -25,6 +25,21 @@ const parseChangingLines = (rawValue) => {
     .filter(Boolean);
 };
 
+// Hide elements marked as transitioning-only when casting_type is static.
+const applyCastingTypeVisibility = () => {
+  const variableEl = document.querySelector("[data-variable='casting_type']");
+  const formEl = document.querySelector("[data-form='casting_type']");
+  const typeInput = document.querySelector('input[name="casting_type"]');
+  const variableValue = variableEl ? variableEl.textContent.trim() : "";
+  const formValue = formEl ? formEl.textContent.trim() : "";
+  const inputValue = typeInput ? String(typeInput.value || "").trim() : "";
+  const castingType = (variableValue || formValue || inputValue).toLowerCase();
+  const isStatic = castingType === "static";
+  document.querySelectorAll("[transitioning-element]").forEach((el) => {
+    el.hidden = isStatic;
+  });
+};
+
 // Hide or show each line group based on the changing_lines array.
 // To use: render a hidden element with data-variable="changing_lines"
 // (JSON array string or comma-separated line numbers).
@@ -231,6 +246,7 @@ const syncReferenceFields = () => {
 const scheduleApply = () => {
   requestAnimationFrame(() => {
     applyChangingLines();
+    applyCastingTypeVisibility();
   });
 };
 

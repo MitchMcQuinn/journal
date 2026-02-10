@@ -11,6 +11,7 @@
     <div data-shared-header></div>
     <main>
       <span data-variable="casting_type" hidden></span>
+      <span data-form="casting_type" hidden></span>
       <span data-variable="changing_lines" hidden></span>
       <form
         data-n8n-form
@@ -36,6 +37,8 @@
             <h1>
                 <span data-variable="title"></span>
             </h1>
+            <h4 data-variable="subtitle"></h4>
+            <p><span data-form="query_notes"></span></p>
             <div class="global-tabs">
               <button type="button" class="tab-button is-active" data-global-tab="reading">
                 Reading
@@ -45,10 +48,10 @@
               </button>
             </div>
           </div>
-
+          <section class="summary-content-container"></section>
           <div class="note-section" data-note="casting_notes">
-            <div data-tab-panel="reading" class="reading-panel">
-              <h2><span data-variable="subtitle"></span></h2>
+            <div data-tab-panel="reading">
+              <h2><span data-variable="heading_1"></span></h2>
               <p><span data-variable="complete_overview"></span></p>
             </div>
           </div>
@@ -97,8 +100,8 @@
             hidden
           ></textarea>
 
-          <div data-section="lines" class="reading-panel">
-            <h4 class="lines-title">Lines</h4>
+          <div data-section="lines" class="reading-panel" transitioning-element>
+            <h4 class="lines-title" transitioning-element>Lines</h4>
           <div class="line-item note-section" data-line="1" data-note="line-1">
               <h5>Line 1: <span data-variable="line_1"></span></h5>
               <p><span data-variable="line_1_description"></span></p>
@@ -161,7 +164,7 @@
             ></textarea>
           </div>
 
-          <div data-section="resulting">
+          <div data-section="resulting" transitioning-element>
             <div class="note-section" data-note="resulting-description">
               <h3>
                 <span data-variable="resulting_upper_trigram_emoji"></span>/<span data-variable="resulting_lower_trigram_emoji"></span>

@@ -82,13 +82,26 @@ const normalizeTitle = (item) => {
   return { title: "Untitled", id: String(item), subtitle: "" };
 };
 
+// Update the footer status text beneath the archive list.
+const setArchiveStatus = (message) => {
+  const statusEl = document.querySelector("[data-archive-status]");
+  if (statusEl) {
+    statusEl.textContent = message || "";
+  }
+};
+
 // Render the list of titles and wire click handlers for selection.
-const renderTitles = (titles) => {
+const renderTitles = (titles, { append = false } = {}) => {
   const listEl = document.querySelector("[data-archive-list]");
   if (!listEl) {
     return;
   }
-  listEl.innerHTML = "";
+  const sentinel = listEl.querySelector("[data-archive-sentinel]");
+  if (!append) {
+    listEl.innerHTML = "";
+  } else if (sentinel) {
+    listEl.removeChild(sentinel);
+  }
 
   titles.forEach((item) => {
     const normalized = normalizeTitle(item);
@@ -117,6 +130,10 @@ const renderTitles = (titles) => {
     li.appendChild(button);
     listEl.appendChild(li);
   });
+
+  if (sentinel) {
+    listEl.appendChild(sentinel);
+  }
 };
 
 // Pull the casting data out of common payload shapes.
@@ -148,7 +165,7 @@ const storeArchiveEntry = (payload) => {
 };
 
 // Request the archive list from the webhook and render it.
-const loadArchiveList = async () => {
+const loadArchiveList = async ({ page, append = false } = {}) => {
   const config = await loadConfig();
   const webhookUrl = config.initialization?.webhook_url;
   if (!webhookUrl) {
@@ -156,20 +173,27 @@ const loadArchiveList = async () => {
   }
 
   const baseVariables = config.initialization?.request_variables || {};
+  const parsedPage = Number(page);
+  const pageValue = Number.isFinite(parsedPage)
+    ? parsedPage
+    : Number.isFinite(Number(baseVariables.page))
+      ? Number(baseVariables.page)
+      : 0;
   const response = await postJson(webhookUrl, {
     variables: {
       ...baseVariables,
       flow: baseVariables.flow || "i-ching-journal",
       step: "archive",
       archive: true,
+      page: pageValue,
     },
     form: {},
   });
 
   const payload = unwrapResponse(response);
   const titles = findTitles(payload);
-  renderTitles(titles);
-  document.dispatchEvent(new CustomEvent("page:data-ready"));
+  renderTitles(titles, { append });
+  return titles.length;
 };
 
 // Request one archive entry from the webhook, then redirect to summary.
@@ -197,10 +221,67 @@ const loadArchiveEntry = async ({ title, id }) => {
 
 // Kick off loading once the DOM is ready.
 document.addEventListener("DOMContentLoaded", async () => {
+  const listEl = document.querySelector("[data-archive-list]");
+  if (!listEl) {
+    return;
+  }
+
+  let currentPage = 0;
+  let isLoading = false;
+  let reachedEnd = false;
+  let hasDispatchedReady = false;
+
+  const loadNextPage = async ({ append } = {}) => {
+    if (isLoading || reachedEnd) {
+      return;
+    }
+    isLoading = true;
+    setArchiveStatus("Loading more sessions...");
+    try {
+      const count = await loadArchiveList({ page: currentPage, append });
+      if (count === 0) {
+        reachedEnd = true;
+        setArchiveStatus("No more sessions to load");
+      } else {
+        currentPage += 1;
+        setArchiveStatus("");
+      }
+      if (!hasDispatchedReady) {
+        document.dispatchEvent(new CustomEvent("page:data-ready"));
+        hasDispatchedReady = true;
+      }
+    } catch (error) {
+      setError(error.message || "Unable to load archive.");
+      reachedEnd = true;
+      setArchiveStatus("No more sessions to load");
+    } finally {
+      isLoading = false;
+    }
+  };
+
   try {
-    await loadArchiveList();
+    await loadNextPage({ append: false });
   } catch (error) {
     setError(error.message || "Unable to load archive.");
+  }
+
+  const sentinel = document.createElement("li");
+  sentinel.setAttribute("data-archive-sentinel", "true");
+  listEl.appendChild(sentinel);
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadNextPage({ append: true });
+          }
+        });
+      },
+      { root: null, rootMargin: "0px 0px 200px 0px", threshold: 0 },
+    );
+
+    observer.observe(sentinel);
   }
 });
 })();

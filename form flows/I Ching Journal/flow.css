@@ -276,9 +276,3 @@ p {
 .display-none {
   display: none;
 }
-
-.summary-content-container {
-  background: linear-gradient(to bottom, rgb(7, 8, 9), transparent 30vh);
-  padding: 20px;
-  border-radius: 10px 0 0 0 ;
-}

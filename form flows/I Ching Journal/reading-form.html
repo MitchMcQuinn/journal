@@ -20,40 +20,16 @@
         data-waiting-message="Saving your notes..."
         autocomplete="off"
       >
-        <input type="hidden" name="reference_primary_description" data-reference-field />
-        <input type="hidden" name="reference_primary_judgement" data-reference-field />
-        <input type="hidden" name="reference_primary_image" data-reference-field />
-        <input type="hidden" name="reference_line_1" data-reference-field />
-        <input type="hidden" name="reference_line_2" data-reference-field />
-        <input type="hidden" name="reference_line_3" data-reference-field />
-        <input type="hidden" name="reference_line_4" data-reference-field />
-        <input type="hidden" name="reference_line_5" data-reference-field />
-        <input type="hidden" name="reference_line_6" data-reference-field />
-        <input type="hidden" name="reference_resulting_description" data-reference-field />
-        <input type="hidden" name="reference_resulting_judgement" data-reference-field />
-        <input type="hidden" name="reference_resulting_image" data-reference-field />
         <section>
           <div class="note-section" data-note="casting">
-            <h1>
-                <span data-variable="title"></span>
-            </h1>
+            <h1><span data-variable="title"></span></h1>
             <h4 data-variable="subtitle"></h4>
             <p><span data-form="query_notes"></span></p>
-            <div class="global-tabs">
-              <button type="button" class="tab-button is-active" data-global-tab="reading">
-                Reading
-              </button>
-              <button type="button" class="tab-button" data-global-tab="reference">
-                Reference
-              </button>
-            </div>
           </div>
           <section class="summary-content-container"></section>
           <div class="note-section" data-note="casting_notes">
-            <div data-tab-panel="reading">
-              <h2><span data-variable="heading_1"></span></h2>
-              <p><span data-variable="complete_overview"></span></p>
-            </div>
+            <h2><span data-variable="heading_1"></span></h2>
+            <p><span data-variable="complete_overview"></span></p>
           </div>
           <textarea
             class="note-field"
@@ -102,7 +78,7 @@
 
           <div data-section="lines" class="reading-panel" transitioning-element>
             <h4 class="lines-title" transitioning-element>Lines</h4>
-          <div class="line-item note-section" data-line="1" data-note="line-1">
+            <div class="line-item note-section" data-line="1" data-note="line-1">
               <h5>Line 1: <span data-variable="line_1"></span></h5>
               <p><span data-variable="line_1_description"></span></p>
             </div>
@@ -112,7 +88,7 @@
               placeholder="add notes here"
               hidden
             ></textarea>
-          <div class="line-item note-section" data-line="2" data-note="line-2">
+            <div class="line-item note-section" data-line="2" data-note="line-2">
               <h5>Line 2: <span data-variable="line_2"></span></h5>
               <p><span data-variable="line_2_description"></span></p>
             </div>
@@ -122,7 +98,7 @@
               placeholder="add notes here"
               hidden
             ></textarea>
-          <div class="line-item note-section" data-line="3" data-note="line-3">
+            <div class="line-item note-section" data-line="3" data-note="line-3">
               <h5>Line 3: <span data-variable="line_3"></span></h5>
               <p><span data-variable="line_3_description"></span></p>
             </div>
@@ -132,7 +108,7 @@
               placeholder="add notes here"
               hidden
             ></textarea>
-          <div class="line-item note-section" data-line="4" data-note="line-4">
+            <div class="line-item note-section" data-line="4" data-note="line-4">
               <h5>Line 4: <span data-variable="line_4"></span></h5>
               <p><span data-variable="line_4_description"></span></p>
             </div>
@@ -142,7 +118,7 @@
               placeholder="add notes here"
               hidden
             ></textarea>
-          <div class="line-item note-section" data-line="5" data-note="line-5">
+            <div class="line-item note-section" data-line="5" data-note="line-5">
               <h5>Line 5: <span data-variable="line_5"></span></h5>
               <p><span data-variable="line_5_description"></span></p>
             </div>
@@ -152,7 +128,7 @@
               placeholder="add notes here"
               hidden
             ></textarea>
-          <div class="line-item note-section" data-line="6" data-note="line-6">
+            <div class="line-item note-section" data-line="6" data-note="line-6">
               <h5>Line 6: <span data-variable="line_6"></span></h5>
               <p><span data-variable="line_6_description"></span></p>
             </div>
@@ -180,7 +156,7 @@
             ></textarea>
 
             <div class="note-section" data-note="resulting-judgement">
-              <h4>Judgment</h4>
+              <h4 class="judgement-title">Judgment</h4>
               <h5><span data-variable="resulting_judgement"></span></h5>
               <p><span data-variable="resulting_judgement_description"></span></p>
             </div>
@@ -205,7 +181,7 @@
           </div>
 
           <hr class="divider">
-          
+        
           <h4 class="questions-title">Reflective Questions</h4>
           <div class="note-section reading-panel" data-note="question-1">
             <h4 data-variable="question_1"></h4>
@@ -236,7 +212,6 @@
             placeholder="Add notes about the question"
             hidden
           ></textarea>
-
         </section>
         <button type="submit">Save notes</button>
       </form>

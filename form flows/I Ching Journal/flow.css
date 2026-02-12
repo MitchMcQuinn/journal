@@ -122,7 +122,7 @@ button {
 }
 
 .reading-panel {
-  padding: 12px;
+  padding: 12px 0 12px 0;
 }
 
 [data-section="lines"] {
@@ -144,7 +144,7 @@ button {
 }
 
 .questions-title {
-  padding-left: 12px;
+  padding-left: 12px 0 12px 0;
 }
 
 .reference-display {
@@ -275,4 +275,8 @@ p {
 
 .display-none {
   display: none;
+}
+
+.note-field {
+  margin-top: 12px;
 }

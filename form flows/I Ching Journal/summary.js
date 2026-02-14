@@ -219,3 +219,29 @@ document.addEventListener("click", (event) => {
   }
   setSummaryTab(button.getAttribute("data-summary-tab"));
 });
+
+// Handle "Edit" button: redirect back to reading-form with casting_id and step query params.
+// The step parameter tells app.js to use "reading-form" instead of the default "init" step
+// when initializing the page, so the endpoint knows to load existing casting data.
+document.addEventListener("click", (event) => {
+  const editButton = event.target.closest("[data-edit-casting]");
+  if (!editButton) {
+    return;
+  }
+  const idEl = document.querySelector("[data-variable='id']");
+  const castingId = idEl ? idEl.textContent.trim() : "";
+  if (!castingId) {
+    return;
+  }
+  // Check for optional step override from button attribute.
+  const stepOverride = editButton.getAttribute("data-step-override");
+  if (typeof clearState === "function") {
+    clearState();
+  }
+  const url = new URL("reading-form.html", window.location.href);
+  url.searchParams.set("casting_id", castingId);
+  if (stepOverride) {
+    url.searchParams.set("step", stepOverride);
+  }
+  window.location.href = url.toString();
+});

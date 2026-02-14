@@ -13,6 +13,7 @@
       <span data-variable="changing_lines" hidden></span>
       <span data-variable="casting_type" hidden></span>
       <span data-form="casting_type" hidden></span>
+      <span data-variable="id" hidden></span>
       <h1 data-variable="title"></h1>
       <div class="global-tabs">
         <button type="button" class="tab-button is-active" data-summary-tab="notes">
@@ -161,10 +162,8 @@
           <button
             type="button"
             class="button-link"
-            data-n8n-action
-            data-request-variables='{"flow":"i-ching-journal","step":"edit"}'
-            data-next-step-fallback="edit.html"
-            data-waiting-message="Opening edit view..."
+            data-edit-casting
+            data-step-override="reading-form"
           >
             Edit
           </button>

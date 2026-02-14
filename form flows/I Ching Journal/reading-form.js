@@ -100,19 +100,74 @@ const scheduleApply = () => {
   });
 };
 
+// Read state from localStorage (scoped to this flow's storage key).
+const getStoredState = () => {
+  try {
+    const raw = localStorage.getItem("n8nFormDemoState");
+    if (!raw) {
+      return { variables: {}, form: {} };
+    }
+    const parsed = JSON.parse(raw);
+    return {
+      variables: parsed.variables || {},
+      form: parsed.form || {},
+    };
+  } catch (error) {
+    return { variables: {}, form: {} };
+  }
+};
+
+// Populate note textareas from state.variables (for edit mode).
+// The endpoint returns notes as top-level keys (e.g., casting_notes, primary_hexagram_notes),
+// which get stored in state.variables. This function copies them into the corresponding textareas.
+const populateNoteFieldsFromVariables = () => {
+  const state = getStoredState();
+  document.querySelectorAll(".note-field").forEach((field) => {
+    const fieldName = field.getAttribute("name");
+    if (!fieldName) {
+      return;
+    }
+    // Check if this field name exists in variables (from endpoint response).
+    if (Object.prototype.hasOwnProperty.call(state.variables, fieldName)) {
+      field.value = String(state.variables[fieldName] || "");
+    }
+  });
+};
+
+// Show note fields that already have content (for edit mode).
+const showPopulatedNoteFields = () => {
+  document.querySelectorAll(".note-field").forEach((field) => {
+    const value = field.value ? field.value.trim() : "";
+    if (value) {
+      field.removeAttribute("hidden");
+      autoResizeField(field);
+    }
+  });
+};
+
 // Initial setup: apply line visibility / casting type and size note fields.
 document.addEventListener("DOMContentLoaded", () => {
   scheduleApply();
+  // Populate note fields from variables (for edit mode) before sizing.
+  populateNoteFieldsFromVariables();
   document.querySelectorAll(".note-field").forEach((field) => {
     autoResizeField(field);
+  });
+  // Show fields with content after hydration (for edit mode).
+  requestAnimationFrame(() => {
+    showPopulatedNoteFields();
   });
 });
 // Re-apply state-driven updates once variables are hydrated by app.js.
 document.addEventListener("n8n:hydrated", () => {
   scheduleApply();
+  // Populate note fields from variables (for edit mode) after hydration.
+  populateNoteFieldsFromVariables();
   document.querySelectorAll(".note-field").forEach((field) => {
     autoResizeField(field);
   });
+  // Show fields with content after hydration (for edit mode).
+  showPopulatedNoteFields();
 });
 
 // Clicking a reading section opens its note field (if present).

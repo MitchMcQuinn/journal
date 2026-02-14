@@ -5,6 +5,22 @@ const DEFAULT_STATUS_MESSAGE = "Waiting for response...";
 
 const defaultState = () => ({ variables: {}, form: {}, initialized: false });
 
+// Read URL query parameters and expose them as variables.
+// Example: ?casting_id=123 will produce { casting_id: "123", lookup_id: "123" }.
+const getUrlVariables = () => {
+  const search = window.location.search || "";
+  const params = new URLSearchParams(search);
+  const vars = {};
+  params.forEach((value, key) => {
+    vars[key] = value;
+  });
+  // Provide a canonical lookup_id alias for casting_id if present.
+  if (vars.casting_id && !vars.lookup_id) {
+    vars.lookup_id = vars.casting_id;
+  }
+  return vars;
+};
+
 const readState = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -93,10 +109,12 @@ const buildRequestVariables = ({
   configVariables,
   formVariables,
   actionVariables,
+  urlVariables,
 }) => {
   return {
     ...(stateVariables || {}),
     ...(configVariables || {}),
+    ...(urlVariables || {}),
     ...(formVariables || {}),
     ...(actionVariables || {}),
   };
@@ -221,9 +239,13 @@ const handleInitialization = async (config) => {
     config.initialization.request_variables,
     state.variables,
   );
+  const urlVariables = getUrlVariables();
   const payload = {
     init: true,
-    variables: requestVariables,
+    variables: {
+      ...requestVariables,
+      ...(urlVariables || {}),
+    },
     form: state.form,
   };
 
@@ -255,15 +277,31 @@ const initializeIfNeeded = async (config) => {
     config.initialization.request_variables,
     state.variables,
   );
+  const urlVariables = getUrlVariables();
+  // Allow URL parameter to override the step variable (e.g., ?step=reading-form).
+  const finalVariables = {
+    ...requestVariables,
+    ...(urlVariables || {}),
+  };
+  if (urlVariables.step) {
+    finalVariables.step = urlVariables.step;
+  }
   const payload = {
     init: true,
-    variables: requestVariables,
+    variables: finalVariables,
     form: state.form,
   };
 
   const response = await postJson(config.initialization.webhook_url, payload);
   const responseVariables = normalizeResponseVariables(response);
   let nextState = mergeVariables(state, responseVariables);
+  // Merge form data from response if present (for edit mode to populate existing notes).
+  if (response.form && typeof response.form === "object") {
+    nextState.form = {
+      ...nextState.form,
+      ...response.form,
+    };
+  }
   nextState.initialized = true;
   writeState(nextState);
 };
@@ -299,9 +337,17 @@ const handleForm = async (config) => {
     formData.forEach((value, key) => {
       payloadData[key] = value;
     });
+    // Also collect values from hidden textareas/inputs that might be missed by FormData.
+    form.querySelectorAll("input[name], textarea[name]").forEach((input) => {
+      const name = input.getAttribute("name");
+      if (name && !(name in payloadData)) {
+        payloadData[name] = input.value || "";
+      }
+    });
 
     try {
       const state = readState();
+      const urlVariables = getUrlVariables();
       const requestVariables = buildRequestVariables({
         stateVariables: state.variables,
         formVariables: parseDataJson(formVars, "form data-request-variables"),
@@ -309,6 +355,7 @@ const handleForm = async (config) => {
           submitterVars,
           "button data-request-variables",
         ),
+        urlVariables,
       });
       const payload = {
         form: payloadData,
@@ -369,12 +416,14 @@ const handleActionButtons = async (config) => {
       try {
         const buttonStatus = button.getAttribute("data-waiting-message");
         const state = readState();
+        const urlVariables = getUrlVariables();
         const requestVariables = buildRequestVariables({
           stateVariables: state.variables,
           actionVariables: parseDataJson(
             button.getAttribute("data-request-variables"),
             "button data-request-variables",
           ),
+          urlVariables,
         });
 
         const payload = {
